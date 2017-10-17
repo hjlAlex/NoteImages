@@ -129,7 +129,7 @@ insertOne（）操作将会创建数据库myNewDB和集合myNewCollection1，如
 
 ## Collections(集合) ##
 MongoDB将文档存储在集合中。集合类似于关系数据库中的表。
-### Create a Collection（创建集合）###
+### Create a Collection(创建集合) ###
 > 如果一个集合不存在，MongoDB将在首次存储该集合的数据时创建集合。
 > db.myNewCollection2.insertOne( { x: 1 } )
 > <br/>
