@@ -78,5 +78,71 @@ insertMany()返回包含新插入的文档_id字段值的文档。如图:
 
 有关更多信息和示例，请参阅在CRUD部分插入文档。
 
-未完待续https://docs.mongodb.com/manual/tutorial/getting-started/
+## 查询文档 ##
+### 查询所有文档 ###
+要选择集合中的所有文档，请将空文档作为查询过滤器文档传递给db.collectionName.find（）方法，如：
+> `db.inventory.find( {} )`
+
+要查询符合特定相等条件的文档，请向find（）方法传递给所需文档的<field>：<value>的查询过滤器文档。以下示例从库存集中选择状态等于“D”的所有文档：
+> `db.inventory.find( { status: "D" } )`
+
+### 匹配嵌入文档 ###
+整个嵌入式文档中的等式匹配需要精确匹配指定的`<value>`文档，包括字段顺序。例如，以下查询选择字段大小等于文档的所有文档`{ h: 14, w: 21, uom: "cm" }:`
+> `db.inventory.find( { size: { h: 14, w: 21, uom: "cm" } } )`
+
+### 匹配嵌入文档中的字段 ###
+以下示例选择所有文档，其中uom嵌套在size字段中的字段等于字符串值“in”：
+> `db.inventory.find( { "size.uom": "in" } )`
+
+### 匹配数组中的元素 ###
+以下示例查询所有文档，其中tag是包含字符串“red”作为其元素之一的数组：
+> `db.inventory.find( { tags: "red" } )`
+> 结果如图:
+> ![数据包含字符串查询](images/array-like-match.png "插入多条文档记录")
+
+## 完全匹配数组 ###
+以下示例查询所有文档，其中字段tags值是具有指定顺序的正好两个元素“红色”和“空白”的数组：
+> `db.inventory.find( { tags: ["red", "blank"] } )`
+
+有关更多信息和查询示例，请参阅CRUD部分中的查询文档。 
+
+要更新或删除文档，请参阅更新文档和删除文档。
+
+----------
+# 数据库和集合 #
+MongoDB在文档中存储BSON文档，即数据记录;数据库中的集合，一个集合(collection)中包含多个记录文档。
+
+![collection](images/crud-annotated-collection.bakedsvg.svg "collection")
+
+## Databases(数据库) ##
+在MongoDB中，数据库包含文档集合。一个数据库中包含许多集合，一个集合中又包含多个文档记录。
+要选择要使用的数据库，请在mongo shell中发出使用`<db>`语句，如以下示例所示：
+> `use myDB`
+
+## Create a Database(创建数据库) ##
+如果数据库不存在，MongoDB将在首次存储该数据库的数据时创建数据库。因此，您可以切换到不存在的数据库，并在mongo shell中执行以下操作：
+> `use myNewDB`</br>`db.myNewCollection1.insertOne( { x: 1 } )`
+
+insertOne（）操作将会创建数据库myNewDB和集合myNewCollection1，如果他们都不存在的话。
+
+有关数据库名称的限制列表，请参阅命名限制。
+
+## Collections(集合) ##
+MongoDB将文档存储在集合中。集合类似于关系数据库中的表。
+### Create a Collection（创建集合）###
+> 如果一个集合不存在，MongoDB将在首次存储该集合的数据时创建集合。
+> db.myNewCollection2.insertOne( { x: 1 } )
+> <br/>
+> db.myNewCollection3.createIndex( { y: 1 } )
+> <br/>
+> insertOne（）和createIndex（）操作都会创建它们各自的集合，如果他们都不存在。
+
+### Explicit Creation(明确地创建) ###
+>MongoDB提供db.createCollection（）方法来显式创建具有各种选项的集合，例如设置最大大小或文档验证规则。如果您没有指定这些选项，则不需要显式创建集合，因为当您首次存储集合的数据时，MongoDB将创建新集合。
+
+### Document Validation(文档验证) ###
+>(MongoDB3.2或以上版本才有的特性)
+>默认情况下，集合不需要其文档具有相同的模式;即单个集合中的文档不需要具有相同的字段集合，并且字段的数据类型可以在集合内的文档之间不同。
+>然而，从MongoDB 3.2开始，您可以在更新和插入操作期间对集合执行文档验证规则。有关详细信息，请参阅文档验证。
+
 
